@@ -20,31 +20,31 @@ export default async function handler(req, res) {
 
   if (req.method === "POST") {
     const { eventId, email } = req.body;
-    let newAllEvents = allEvents;
-    // const newAllEvents = allEvents.map((event) => {
-    //   if (event.id === eventId) {
-    //     if (event.emails_registered.includes(email)) {
-    //       res.status(404).json({ message: "Email already registered" });
-    //       return event;
-    //     }
-    //     return {
-    //       ...event,
-    //       emails_registered: [...event.emails_registered, email],
-    //     };
-    //   }
-    //   return event;
-    // });
-
-    for (let i = 0; i < newAllEvents.length; i++) {
-      if (newAllEvents[i].id === eventId) {
-        if (newAllEvents[i].emails_registered.includes(email)) {
-          res.status(409).json({ msg: "Email already registered" });
-          break;
-        } else {
-          newAllEvents[i].emails_registered.push(email);
+    // let newAllEvents = allEvents;
+    const newAllEvents = allEvents.map((event) => {
+      if (event.id === eventId) {
+        if (event.emails_registered.includes(email)) {
+          res.status(409).json({ message: "Email already registered" });
+          return event;
         }
+        return {
+          ...event,
+          emails_registered: [...event.emails_registered, email],
+        };
       }
-    }
+      return event;
+    });
+
+    // for (let i = 0; i < newAllEvents.length; i++) {
+    //   if (newAllEvents[i].id === eventId) {
+    //     if (newAllEvents[i].emails_registered.includes(email)) {
+    //       res.status(409).json({ msg: "Email already registered" });
+    //       break;
+    //     } else {
+    //       newAllEvents[i].emails_registered.push(email);
+    //     }
+    //   }
+    // }
 
     fs.writeFileSync(
       filePath,
@@ -56,6 +56,4 @@ export default async function handler(req, res) {
   if (req.method === "GET") {
     res.status(200).json({ msg: "Registration axkhbakbj" });
   }
-
-  // res.status(200).json({ name: "Registered" });
 }
